@@ -3,12 +3,12 @@ jobs:
     dependsOn: GetReleaseVersion
     timeoutInMinutes: 180
     strategy:
-      maxParallel: 2
+      maxParallel: 1
       matrix:
         x64:
           buildArch: x64
-        x86:
-          buildArch: x86
+        # x86:
+        #   buildArch: x86
 
     pool:
       vmImage: vs2017-win2016
@@ -200,16 +200,16 @@ jobs:
     dependsOn: Windows_Build
     timeoutInMinutes: 180
     strategy:
-      maxParallel: 4
+      maxParallel: 3
       matrix:
         core_x64:
           RunCoreTests: true
           RunPackageTests: false
           buildArch: x64
-        core_x86:
-          RunCoreTests: true
-          RunPackageTests: false
-          buildArch: x86
+        # core_x86:
+        #   RunCoreTests: true
+        #   RunPackageTests: false
+        #   buildArch: x86
         packages-1:
           RunCoreTests: false
           RunPackageTests: 1
