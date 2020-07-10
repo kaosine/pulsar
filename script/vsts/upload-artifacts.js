@@ -127,12 +127,12 @@ async function uploadArtifacts() {
       ? spawnSync('git', ['rev-parse', 'HEAD'])
           .stdout.toString()
           .trimEnd()
-      : 'master'; // Nightly tags are created in atom/atom-nightly-releases so the SHA is irrelevant
+      : 'master'; // Nightly tags are created in atom-ide-community/atom-nightly-releases so the SHA is irrelevant
 
     console.log(`Creating GitHub release v${releaseVersion}`);
     const release = await publishReleaseAsync({
       token: process.env.GITHUB_TOKEN,
-      owner: 'atom',
+      owner: 'atom-ide-community',
       repo: !isNightlyRelease ? 'atom' : 'atom-nightly-releases',
       name: CONFIG.computedAppVersion,
       notes: newReleaseNotes,
