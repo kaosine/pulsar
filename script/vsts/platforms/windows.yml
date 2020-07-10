@@ -1,5 +1,5 @@
 jobs:
-  - job: Windows
+  - job: Windows_Build
     dependsOn: GetReleaseVersion
     timeoutInMinutes: 180
     strategy:
@@ -114,6 +114,188 @@ jobs:
           npm_config_build_from_source: true
         displayName: Build Atom
 
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: $(Build.SourcesDirectory)/out/atom-x64-windows.zip
+          ArtifactName: atom-x64-windows.zip
+          ArtifactType: Container
+        displayName: Upload atom-x64-windows.zip
+        condition: and(succeeded(), eq(variables['buildArch'], 'x64'))
+
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: $(Build.SourcesDirectory)/out/AtomSetup-x64.exe
+          ArtifactName: AtomSetup-x64.exe
+          ArtifactType: Container
+        displayName: Upload AtomSetup-x64.exe
+        condition: and(succeeded(), eq(variables['IsReleaseBranch'], 'true'), eq(variables['buildArch'], 'x64'))
+
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: $(Build.SourcesDirectory)/out/$(AppName)-x64-$(ReleaseVersion)-full.nupkg
+          ArtifactName: $(AppName)-x64-$(ReleaseVersion)-full.nupkg
+          ArtifactType: Container
+        displayName: Upload $(AppName)-x64-$(ReleaseVersion)-full.nupkg
+        condition: and(succeeded(), eq(variables['IsReleaseBranch'], 'true'), eq(variables['buildArch'], 'x64'))
+
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: $(Build.SourcesDirectory)/out/$(AppName)-x64-$(ReleaseVersion)-delta.nupkg
+          ArtifactName: $(AppName)-x64-$(ReleaseVersion)-delta.nupkg
+          ArtifactType: Container
+        displayName: Upload $(AppName)-x64-$(ReleaseVersion)-delta.nupkg
+        condition: and(succeeded(), eq(variables['IsReleaseBranch'], 'true'), eq(variables['buildArch'], 'x64'))
+        continueOnError: true # Nightly builds don't produce delta packages yet, so don't fail the build
+
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: $(Build.SourcesDirectory)/out/RELEASES-x64
+          ArtifactName: RELEASES-x64
+          ArtifactType: Container
+        displayName: Upload RELEASES-x64
+        condition: and(succeeded(), eq(variables['IsReleaseBranch'], 'true'), eq(variables['buildArch'], 'x64'))
+
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: $(Build.SourcesDirectory)/out/atom-windows.zip
+          ArtifactName: atom-windows.zip
+          ArtifactType: Container
+        displayName: Upload atom-windows.zip
+        condition: and(succeeded(), eq(variables['buildArch'], 'x86'))
+
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: $(Build.SourcesDirectory)/out/AtomSetup.exe
+          ArtifactName: AtomSetup.exe
+          ArtifactType: Container
+        displayName: Upload AtomSetup.exe
+        condition: and(succeeded(), eq(variables['IsReleaseBranch'], 'true'), eq(variables['buildArch'], 'x86'))
+
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: $(Build.SourcesDirectory)/out/$(AppName)-$(ReleaseVersion)-full.nupkg
+          ArtifactName: $(AppName)-$(ReleaseVersion)-full.nupkg
+          ArtifactType: Container
+        displayName: Upload $(AppName)-$(ReleaseVersion)-full.nupkg
+        condition: and(succeeded(), eq(variables['IsReleaseBranch'], 'true'), eq(variables['buildArch'], 'x86'))
+
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: $(Build.SourcesDirectory)/out/$(AppName)-$(ReleaseVersion)-delta.nupkg
+          ArtifactName: $(AppName)-$(ReleaseVersion)-delta.nupkg
+          ArtifactType: Container
+        displayName: Upload $(AppName)-$(ReleaseVersion)-delta.nupkg
+        condition: and(succeeded(), eq(variables['IsReleaseBranch'], 'true'), eq(variables['buildArch'], 'x86'))
+        continueOnError: true # Nightly builds don't produce delta packages yet, so don't fail the build
+
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: $(Build.SourcesDirectory)/out/RELEASES
+          ArtifactName: RELEASES
+          ArtifactType: Container
+        displayName: Upload RELEASES
+        condition: and(succeeded(), eq(variables['IsReleaseBranch'], 'true'), eq(variables['buildArch'], 'x86'))
+
+  - job: Windows_Tets
+    dependsOn: Windows_Build
+    timeoutInMinutes: 180
+    strategy:
+      maxParallel: 4
+      matrix:
+        core_x64:
+          RunCoreTests: true
+          RunPackageTests: false
+          buildArch: x64
+        core_x86:
+          RunCoreTests: true
+          RunPackageTests: false
+          buildArch: x86
+        packages-1:
+          RunCoreTests: false
+          RunPackageTests: 1
+          buildArch: x64
+        packages-2:
+          RunCoreTests: false
+          RunPackageTests: 2
+          buildArch: x64
+
+    pool:
+      vmImage: vs2017-win2016
+
+    variables:
+      AppName: $[ dependencies.GetReleaseVersion.outputs['Version.AppName'] ]
+      ReleaseVersion: $[ dependencies.GetReleaseVersion.outputs['Version.ReleaseVersion'] ]
+      IsReleaseBranch: $[ dependencies.GetReleaseVersion.outputs['Version.IsReleaseBranch'] ]
+      IsSignedZipBranch: $[ dependencies.GetReleaseVersion.outputs['Version.IsSignedZipBranch'] ]
+
+    steps:
+      - script: |
+          IF [%BUILD_ARCH%]==[x64] (
+            SET RunCommand=
+          ) ELSE (
+            SET RunCommand=node script\vsts\windows-run.js
+          )
+          echo RunCommand set to: %RunCommand%
+        env:
+          BUILD_ARCH: $(buildArch)
+        displayName: Set RunCommand based on the arch
+
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '2.7'
+
+      - task: NodeTool@0
+        inputs:
+          versionSpec: 12.13.1
+        displayName: Install Node.js 12.13.1
+
+      - script: |
+          ECHO Installing npm-windows-upgrade
+          npm install --global --production npm-windows-upgrade
+        displayName: Install npm-windows-upgrade
+
+      - script: |
+          ECHO Upgrading npm
+          npm-windows-upgrade --no-spinner --no-prompt --npm-version 6.12.1
+        displayName: Install npm 6.12.1
+
+      - script: |
+          npm install --global --production windows-build-tools@4.0
+        displayName: Install windows build tools
+
+      - script: |
+          cd script\vsts
+          npm install
+        displayName: Install Windows build dependencies
+
+      - template: cache.yml
+        parameters:
+          OS: windows
+
+      # Downloading the build artifacts
+      - task: DownloadBuildArtifacts@0
+        displayName: Download atom-x64-windows.zip
+        inputs:
+          artifactName: 'atom-x64-windows.zip'
+          downloadPath: $(Build.SourcesDirectory)
+        condition: and(succeeded(), eq(variables['buildArch'], 'x64'))
+
+      - script: unzip atom-x64-windows.zip/atom-x64-windows.zip -d out
+        displayName: Unzip atom-x64-windows.zip
+        condition: and(succeeded(), eq(variables['buildArch'], 'x64'))
+
+      - task: DownloadBuildArtifacts@0
+        displayName: Download atom-windows.zip
+        inputs:
+          artifactName: 'atom-windows.zip'
+          downloadPath: $(Build.SourcesDirectory)
+        condition: and(succeeded(), eq(variables['buildArch'], 'x86'))
+
+      - script: unzip atom-windows.zip/atom-windows.zip -d out
+        displayName: Unzip atom-windows.zip
+        condition: and(succeeded(), eq(variables['buildArch'], 'x86'))
+
+      # Run the tests
       - script: |
           %RunCommand% script\test.cmd
         env:
@@ -121,6 +303,8 @@ jobs:
           CI_PROVIDER: VSTS
           ATOM_JASMINE_REPORTER: list
           TEST_JUNIT_XML_ROOT: $(Common.TestResultsDirectory)\junit
+          ATOM_RUN_CORE_TESTS: $(RunCoreTests)
+          ATOM_RUN_PACKAGE_TESTS: $(RunPackageTests)
           BUILD_ARCH: $(buildArch)
         displayName: Run tests
         condition: and(succeeded(), ne(variables['Atom.SkipTests'], 'true'))
@@ -169,85 +353,3 @@ jobs:
           BUILD_ID: $(Build.BuildId)
         displayName: Upload crash reports to S3 on release branch
         condition: and(failed(), ne(variables['ATOM_RELEASES_S3_KEY'], ''))
-
-      - task: PublishBuildArtifacts@1
-        inputs:
-          PathtoPublish: $(Build.SourcesDirectory)/out/atom-x64-windows.zip
-          ArtifactName: atom-x64-windows.zip
-          ArtifactType: Container
-        displayName: Upload atom-x64-windows.zip
-        condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['buildArch'], 'x64'))
-
-      - task: PublishBuildArtifacts@1
-        inputs:
-          PathtoPublish: $(Build.SourcesDirectory)/out/AtomSetup-x64.exe
-          ArtifactName: AtomSetup-x64.exe
-          ArtifactType: Container
-        displayName: Upload AtomSetup-x64.exe
-        condition: and(succeeded(), eq(variables['IsReleaseBranch'], 'true'), eq(variables['buildArch'], 'x64'))
-
-      - task: PublishBuildArtifacts@1
-        inputs:
-          PathtoPublish: $(Build.SourcesDirectory)/out/$(AppName)-x64-$(ReleaseVersion)-full.nupkg
-          ArtifactName: $(AppName)-x64-$(ReleaseVersion)-full.nupkg
-          ArtifactType: Container
-        displayName: Upload $(AppName)-x64-$(ReleaseVersion)-full.nupkg
-        condition: and(succeeded(), eq(variables['IsReleaseBranch'], 'true'), eq(variables['buildArch'], 'x64'))
-
-      - task: PublishBuildArtifacts@1
-        inputs:
-          PathtoPublish: $(Build.SourcesDirectory)/out/$(AppName)-x64-$(ReleaseVersion)-delta.nupkg
-          ArtifactName: $(AppName)-x64-$(ReleaseVersion)-delta.nupkg
-          ArtifactType: Container
-        displayName: Upload $(AppName)-x64-$(ReleaseVersion)-delta.nupkg
-        condition: and(succeeded(), eq(variables['IsReleaseBranch'], 'true'), eq(variables['buildArch'], 'x64'))
-        continueOnError: true # Nightly builds don't produce delta packages yet, so don't fail the build
-
-      - task: PublishBuildArtifacts@1
-        inputs:
-          PathtoPublish: $(Build.SourcesDirectory)/out/RELEASES-x64
-          ArtifactName: RELEASES-x64
-          ArtifactType: Container
-        displayName: Upload RELEASES-x64
-        condition: and(succeeded(), eq(variables['IsReleaseBranch'], 'true'), eq(variables['buildArch'], 'x64'))
-
-      - task: PublishBuildArtifacts@1
-        inputs:
-          PathtoPublish: $(Build.SourcesDirectory)/out/atom-windows.zip
-          ArtifactName: atom-windows.zip
-          ArtifactType: Container
-        displayName: Upload atom-windows.zip
-        condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['buildArch'], 'x86'))
-
-      - task: PublishBuildArtifacts@1
-        inputs:
-          PathtoPublish: $(Build.SourcesDirectory)/out/AtomSetup.exe
-          ArtifactName: AtomSetup.exe
-          ArtifactType: Container
-        displayName: Upload AtomSetup.exe
-        condition: and(succeeded(), eq(variables['IsReleaseBranch'], 'true'), eq(variables['buildArch'], 'x86'))
-
-      - task: PublishBuildArtifacts@1
-        inputs:
-          PathtoPublish: $(Build.SourcesDirectory)/out/$(AppName)-$(ReleaseVersion)-full.nupkg
-          ArtifactName: $(AppName)-$(ReleaseVersion)-full.nupkg
-          ArtifactType: Container
-        displayName: Upload $(AppName)-$(ReleaseVersion)-full.nupkg
-        condition: and(succeeded(), eq(variables['IsReleaseBranch'], 'true'), eq(variables['buildArch'], 'x86'))
-
-      - task: PublishBuildArtifacts@1
-        inputs:
-          PathtoPublish: $(Build.SourcesDirectory)/out/$(AppName)-$(ReleaseVersion)-delta.nupkg
-          ArtifactName: $(AppName)-$(ReleaseVersion)-delta.nupkg
-          ArtifactType: Container
-        displayName: Upload $(AppName)-$(ReleaseVersion)-delta.nupkg
-        condition: and(succeeded(), eq(variables['IsReleaseBranch'], 'true'), eq(variables['buildArch'], 'x86'))
-        continueOnError: true # Nightly builds don't produce delta packages yet, so don't fail the build
-
-      - task: PublishBuildArtifacts@1
-        inputs:
-          PathtoPublish: $(Build.SourcesDirectory)/out/RELEASES
-          ArtifactName: RELEASES
-          ArtifactType: Container
-        displayName: Upload RELEASES
-        condition: and(succeeded(), eq(variables['IsReleaseBranch'], 'true'), eq(variables['buildArch'], 'x86'))
