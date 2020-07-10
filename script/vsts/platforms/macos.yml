@@ -44,6 +44,7 @@ jobs:
       - script: script/bootstrap
         displayName: Bootstrap build environment
         env:
+          GITHUB_TOKEN: $(GITHUB_TOKEN)
           CI: true
           CI_PROVIDER: VSTS
           NPM_BIN_PATH: /usr/local/bin/npm
@@ -154,6 +155,7 @@ jobs:
       - script: script/bootstrap
         displayName: Bootstrap build environment
         env:
+          GITHUB_TOKEN: $(GITHUB_TOKEN)
           CI: true
           CI_PROVIDER: VSTS
           NPM_BIN_PATH: /usr/local/bin/npm
