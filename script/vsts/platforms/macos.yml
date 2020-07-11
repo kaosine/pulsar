@@ -14,8 +14,8 @@ jobs:
     steps:
       - task: NodeTool@0
         inputs:
-          versionSpec: 12.13.1
-        displayName: Install Node.js 12.13.1
+          versionSpec: 12.16.3
+        displayName: Install Node.js 12.16.3
 
       - script: npm install --global npm@6
         displayName: Update npm
@@ -105,8 +105,8 @@ jobs:
     steps:
       - task: NodeTool@0
         inputs:
-          versionSpec: 12.13.1
-        displayName: Install Node.js 12.13.1
+          versionSpec: 12.16.3
+        displayName: Install Node.js 12.16.3
 
       - script: npm install --global npm@6
         displayName: Update npm
