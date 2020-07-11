@@ -33,6 +33,7 @@ jobs:
       - template: cache.yml
         parameters:
           OS: linux
+        condition: false # disable caching
 
       - script: script/bootstrap
         displayName: Bootstrap build environment

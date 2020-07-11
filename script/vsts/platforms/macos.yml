@@ -23,6 +23,7 @@ jobs:
       - template: cache.yml
         parameters:
           OS: macos
+        condition: false # disable caching
 
       - script: script/bootstrap
         displayName: Bootstrap build environment
@@ -114,6 +115,7 @@ jobs:
       - template: cache.yml
         parameters:
           OS: macos
+        condition: false # disable caching
 
       # The artifact caching task does not work on forks, so we need to
       # bootstrap again for pull requests coming from forked repositories.
