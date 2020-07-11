@@ -24,10 +24,10 @@ jobs:
 
       - task: NodeTool@0
         inputs:
-          versionSpec: 12.16.3
-        displayName: Install Node.js 12.16.3
+          versionSpec: 12.13.1
+        displayName: Install Node.js 12.13.1
 
-      - script: npm install --global npm@6
+      - script: npm install --global npm@6.12.1
         displayName: Update npm
 
       - template: cache.yml
