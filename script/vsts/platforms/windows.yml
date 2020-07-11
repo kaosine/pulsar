@@ -28,6 +28,7 @@ jobs:
         inputs:
           versionSpec: 12.13.1
         displayName: Install Node.js 12.13.1
+        condition: false # Node.js in the images is already up-to-date. "Upgrading" isn't recommended.
 
       - script: |
           ECHO Installing npm-windows-upgrade
