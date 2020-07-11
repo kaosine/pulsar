@@ -34,13 +34,11 @@ jobs:
           ECHO Installing npm-windows-upgrade
           npm install --global --production npm-windows-upgrade
         displayName: Install npm-windows-upgrade
-        condition: false # npm in the images is already up-to-date. "Upgrading" isn't recommended.
 
       - script: |
           ECHO Upgrading npm
-          npm-windows-upgrade --no-spinner --no-prompt --npm-version 6.12.1
-        displayName: Install npm 6.12.1
-        condition: false # npm in the images is already up-to-date. "Upgrading" isn't recommended.
+          npm-windows-upgrade --no-spinner --no-prompt --npm-version latest
+        displayName: Install latest npm
 
       - script: |
           npm install --global --production windows-build-tools@4.0
