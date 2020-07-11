@@ -12,6 +12,9 @@ steps:
     displayName: Cache node_modules
     inputs:
       key: 'npm | "$(Agent.OS)" | "$(buildArch)" | package.json, package-lock.json, script/vsts/platforms/${{ parameters.OS }}.yml'
+      restoreKeys: |
+         npm | "$(Agent.OS)" | "$(buildArch)" | package.json, package-lock.json
+         npm | "$(Agent.OS)" | "$(buildArch)"
       path: 'node_modules'
       cacheHitVar: MainNodeModulesRestored
 
@@ -19,6 +22,9 @@ steps:
     displayName: Cache script/node_modules
     inputs:
       key: 'npm | "$(Agent.OS)" | "$(buildArch)" | script/package.json, script/package-lock.json, script/vsts/platforms/${{ parameters.OS }}.yml'
+      restoreKeys: |
+         npm | "$(Agent.OS)" | "$(buildArch)" | script/package.json, script/package-lock.json
+         npm | "$(Agent.OS)" | "$(buildArch)"
       path: 'script/node_modules'
       cacheHitVar: ScriptNodeModulesRestored
 
@@ -26,5 +32,8 @@ steps:
     displayName: Cache apm/node_modules
     inputs:
       key: 'npm | "$(Agent.OS)" | "$(buildArch)" | apm/package.json, apm/package-lock.json, script/vsts/platforms/${{ parameters.OS }}.yml'
+      restoreKeys: |
+         npm | "$(Agent.OS)" | "$(buildArch)" | apm/package.json, apm/package-lock.json
+         npm | "$(Agent.OS)" | "$(buildArch)"
       path: 'apm/node_modules'
       cacheHitVar: ApmNodeModulesRestored
