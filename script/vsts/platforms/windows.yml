@@ -56,7 +56,6 @@ jobs:
       - template: cache.yml
         parameters:
           OS: windows
-        condition: false # disable cache for now?
 
       - script: |
           node script\vsts\windows-run.js script\bootstrap.cmd
