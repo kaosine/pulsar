@@ -33,6 +33,7 @@ jobs:
           ECHO Installing npm-windows-upgrade
           npm install --global --production npm-windows-upgrade
         displayName: Install npm-windows-upgrade
+        condition: false # npm in the images is already up-to-date. "Upgrading" isn't recommended.
 
       - script: |
           ECHO Upgrading npm
