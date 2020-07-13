@@ -24,7 +24,7 @@ jobs:
     steps:
       - template: templates/windows-preparation.yml
 
-      - template: cache.yml
+      - template: templates/cache.yml
         parameters:
           OS: windows
 
@@ -191,7 +191,7 @@ jobs:
     steps:
       - template: templates/windows-preparation.yml
 
-      - template: cache.yml
+      - template: templates/cache.yml
         parameters:
           OS: windows
 
