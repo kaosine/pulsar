@@ -7,8 +7,10 @@ jobs:
       matrix:
         x64:
           buildArch: x64
+          RunCoreMainTests: true
         x86:
           buildArch: x86
+          RunCoreMainTests: true
 
     pool:
       vmImage: vs2017-win2016
@@ -159,17 +161,20 @@ jobs:
         displayName: Upload RELEASES
         condition: and(succeeded(), eq(variables['IsReleaseBranch'], 'true'), eq(variables['buildArch'], 'x86'))
 
-  - job: Windows_Tests
+      #  Core main tests
+      - template: templates/windows-test.yml
+
+  - job: Windows_RendererTests
     dependsOn: Windows_Build
     timeoutInMinutes: 180
     strategy:
-      maxParallel: 3
+      maxParallel: 2
       matrix:
-        x64_test1:
-          RunCoreMainTests: true
+        x64_Renderer_Test1:
+          RunCoreMainTests: false
           RunCoreRenderer: 1
           buildArch: x64
-        x64_test2:
+        x64_Renderer_Test2:
           RunCoreMainTests: false
           RunCoreRenderer: 2
           buildArch: x64
@@ -213,4 +218,5 @@ jobs:
         displayName: Unzip atom-windows.zip
         condition: and(succeeded(), eq(variables['buildArch'], 'x86'))
 
+      #  Core renderer tests
       - template: templates/windows-test.yml
