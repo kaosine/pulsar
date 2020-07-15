@@ -8,9 +8,9 @@ jobs:
         x64:
           buildArch: x64
           RunCoreMainTests: true
-        x86:
-          buildArch: x86
-          RunCoreMainTests: true
+        # x86:
+        #   buildArch: x86
+        #   RunCoreMainTests: true
 
     pool:
       vmImage: vs2017-win2016
