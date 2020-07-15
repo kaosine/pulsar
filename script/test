@@ -112,7 +112,7 @@ for (let testFile of testFiles) {
     ]
     const cp = childProcess.spawn(executablePath, testArguments, {stdio: 'inherit', env: testEnv})
     cp.on('error', error => { callback(error) })
-    cp.on('close', exitCode => { callback(null, {exitCode, step: 'core-render-process'}) })
+    cp.on('close', exitCode => { callback(null, {exitCode, step: `core-render-process for ${testFile}`}) })
   })
 }
 
