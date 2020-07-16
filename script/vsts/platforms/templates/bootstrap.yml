@@ -28,4 +28,5 @@ steps:
       GITHUB_TOKEN: $(GITHUB_TOKEN)
       CI: true
       CI_PROVIDER: VSTS
+      npm_config_cache: $(Agent.BuildDirectory)/npm_package_cache_dir
     condition: or(ne(variables['MainNodeModulesRestored'], 'true'), ne(variables['ScriptNodeModulesRestored'], 'true'), ne(variables['ApmNodeModulesRestored'], 'true'))
