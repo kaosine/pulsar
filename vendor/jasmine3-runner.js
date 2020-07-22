@@ -7,16 +7,4 @@ module.exports = createRunner({
   testPackages: [],
   timeReporter: true,
   specHelper: true,
-  attachToDOM: true,
-  // Extra Packages
-  customMatchers: true,
-  jasmineFocused: true,
-  jasmineJson: true,
-  jasminePass: true,
-  jasmineShouldFail: true,
-  jasmineTagged: true,
-  mockClock: true,
-  mockLocalStorage: true,
-  profile: true,
-  unspy: true,
 });
