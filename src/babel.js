@@ -1,6 +1,6 @@
 'use strict';
 
-const babelPresetAtomic = require("babel-preset-atomic") // included for electron-link bundle
+require('babel-preset-atomic'); // included for electron-link bundle
 
 var crypto = require('crypto');
 var path = require('path');
