@@ -33,7 +33,13 @@ steps:
     displayName: Update npm
     condition: eq(variables['Agent.OS'], 'Linux')
 
-  - script: /Users/runner/hostedtoolcache/node/10.22.0/x64/bin/npm install --global npm@3.10.7
+  - script: |
+      /Users/runner/hostedtoolcache/node/10.22.0/x64/bin/npm install --global npm@3.10.7
+      # Updates the following symlink and modules: /usr/local/bin/npm -> /usr/local/lib/node_modules/npm/bin/npm-cli.js
+      echo 'Deleting NodeTool@0 bundled npm'
+      rm -rf /Users/runner/hostedtoolcache/node/10.22.0/x64/lib/node_modules
+      echo 'Replacing NodeTool@0 bundled npm with npm 3.10.7 from /usr/local'
+      cp -r /usr/local/lib/node_modules/ /Users/runner/hostedtoolcache/node/10.22.0/x64/lib/node_modules
     displayName: Update npm
     condition: eq(variables['Agent.OS'], 'Darwin')
 
