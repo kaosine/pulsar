@@ -27,15 +27,15 @@ steps:
 
   - script: 'C:\hostedtoolcache\windows\node\10.22.0\x64\npm install --global npm@3.10.7'
     displayName: Update npm
-    condition: eq(variables.Agent.OS, 'Windows_NT')
+    condition: eq(variables['Agent.OS'], 'Windows_NT')
 
   - script: /opt/hostedtoolcache/node/10.22.0/x64/bin/npm install --global npm@3.10.7
     displayName: Update npm
-    condition: eq(variables.Agent.OS, 'Linux')
+    condition: eq(variables['Agent.OS'], 'Linux')
 
   - script: /Users/runner/hostedtoolcache/node/10.22.0/x64/bin/npm install --global npm@3.10.7
     displayName: Update npm
-    condition: eq(variables.Agent.OS, 'Darwin')
+    condition: eq(variables['Agent.OS'], 'Darwin')
 
   # Use Azure Syntax to set env variables for all shells and steps
   - pwsh: |
