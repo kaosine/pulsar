@@ -11,10 +11,6 @@ jobs:
     steps:
       - template: templates/preparation.yml
 
-      - template: templates/cache.yml
-        parameters:
-          OS: linux
-
       - script: script/bootstrap
         displayName: Bootstrap build environment
         env:
