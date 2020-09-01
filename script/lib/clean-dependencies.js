@@ -21,6 +21,13 @@ module.exports = function() {
   console.log(`Cleaning ${atomDependenciesPath}`);
   fs.removeSync(atomDependenciesPath);
 
+  const externalsDependenciesPath = path.join(
+    CONFIG.externalsRootPath,
+    'node_modules'
+  );
+  console.log(`Cleaning ${externalsDependenciesPath}`);
+  fs.removeSync(externalsDependenciesPath);
+
   const scriptDependenciesPath = path.join(
     CONFIG.scriptRootPath,
     'node_modules'

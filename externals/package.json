@@ -1,0 +1,11 @@
+{
+  "name": "atom-externals",
+  "version": "1.0.0",
+  "description": "External applications used in Atom",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/core": "^7.11.5",
+    "babel-preset-atomic": "^1.1.0"
+  }
+}

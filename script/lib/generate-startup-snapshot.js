@@ -47,6 +47,12 @@ module.exports = function(packagedAppPath) {
       return (
         requiredModulePath.endsWith('.node') ||
         coreModules.has(requiredModulePath) ||
+        requiredModuleRelativePath.includes(
+          path.join('externals', 'node_modules')
+        ) ||
+        requiredModuleRelativePath.includes(
+          path.join('externals', 'src')
+        ) ||
         requiringModuleRelativePath.endsWith(
           path.join('node_modules/xregexp/xregexp-all.js')
         ) ||
@@ -132,24 +138,6 @@ module.exports = function(packagedAppPath) {
             'lib',
             'command-event.js'
           ) ||
-        requiredModuleRelativePath.startsWith(
-          path.join('..', 'node_modules', '@babel')
-        ) ||
-        requiredModuleRelativePath.startsWith(
-          path.join('..', 'node_modules', 'babel-plugin-add-module-exports')
-        ) ||
-        requiredModuleRelativePath.startsWith(
-          path.join('node_modules', '@babel')
-        ) ||
-        requiredModuleRelativePath.startsWith(
-          path.join('node_modules', 'babel-plugin-add-module-exports')
-        ) ||
-        requiredModuleRelativePath.startsWith(
-          path.join('node_modules', 'babel-preset')
-        ) ||
-        requiredModuleRelativePath.startsWith(
-          path.join('..', 'node_modules', 'babel-preset')
-        ) ||
         requiredModuleRelativePath ===
           path.join('..', 'node_modules', 'debug', 'node.js') ||
         requiredModuleRelativePath ===

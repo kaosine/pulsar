@@ -15,7 +15,7 @@ var CSON = null;
 var packageTranspilationRegistry = new PackageTranspilationRegistry();
 
 var COMPILERS = {
-  '.js': packageTranspilationRegistry.wrapTranspiler(require('./babel')),
+  '.js': packageTranspilationRegistry.wrapTranspiler(require('../externals/src/babel')),
   '.ts': packageTranspilationRegistry.wrapTranspiler(require('./typescript')),
   '.tsx': packageTranspilationRegistry.wrapTranspiler(require('./typescript')),
   '.coffee': packageTranspilationRegistry.wrapTranspiler(

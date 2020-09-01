@@ -18,6 +18,7 @@ module.exports = function() {
     path.join(CONFIG.repositoryRootPath, 'package.json'),
     path.join(CONFIG.repositoryRootPath, 'static'),
     path.join(CONFIG.repositoryRootPath, 'src'),
+    path.join(CONFIG.repositoryRootPath, 'externals'),
     path.join(CONFIG.repositoryRootPath, 'vendor')
   ];
   srcPaths = srcPaths.concat(

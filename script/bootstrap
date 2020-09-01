@@ -11,6 +11,7 @@ const dependenciesFingerprint = require('./lib/dependencies-fingerprint')
 const installApm = require('./lib/install-apm')
 const runApmInstall = require('./lib/run-apm-install')
 const installScriptDependencies = require('./lib/install-script-dependencies')
+const installExternalsDependencies = require('./lib/install-externals-dependencies')
 const verifyMachineRequirements = require('./lib/verify-machine-requirements')
 
 process.on('unhandledRejection', function (e) {
@@ -42,5 +43,6 @@ childProcess.execFileSync(
   {stdio: 'inherit'}
 )
 runApmInstall(CONFIG.repositoryRootPath, ci)
+installExternalsDependencies(ci)
 
 dependenciesFingerprint.write()
