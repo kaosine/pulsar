@@ -33,6 +33,7 @@ jobs:
           CI: true
           CI_PROVIDER: VSTS
           npm_config_build_from_source: true
+          GITHUB_TOKEN: $(GITHUB_TOKEN)
         displayName: Bootstrap build environment
         condition: or(ne(variables['MainNodeModulesRestored'], 'true'), ne(variables['ScriptNodeModulesRestored'], 'true'), ne(variables['ApmNodeModulesRestored'], 'true'))
 

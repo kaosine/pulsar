@@ -24,6 +24,7 @@ jobs:
           CI: true
           CI_PROVIDER: VSTS
           npm_config_build_from_source: true
+          GITHUB_TOKEN: $(GITHUB_TOKEN)
         condition: or(ne(variables['MainNodeModulesRestored'], 'true'), ne(variables['ScriptNodeModulesRestored'], 'true'), ne(variables['ApmNodeModulesRestored'], 'true'))
 
       - script: |
@@ -107,6 +108,7 @@ jobs:
           CI: true
           CI_PROVIDER: VSTS
           npm_config_build_from_source: true
+          GITHUB_TOKEN: $(GITHUB_TOKEN)
         condition: or(ne(variables['MainNodeModulesRestored'], 'true'), ne(variables['ScriptNodeModulesRestored'], 'true'), ne(variables['ApmNodeModulesRestored'], 'true'))
 
       - task: DownloadBuildArtifacts@0

@@ -23,6 +23,7 @@ jobs:
           CC: clang
           CXX: clang++
           npm_config_clang: 1
+          GITHUB_TOKEN: $(GITHUB_TOKEN)
         condition: or(ne(variables['MainNodeModulesRestored'], 'true'), ne(variables['ScriptNodeModulesRestored'], 'true'), ne(variables['ApmNodeModulesRestored'], 'true'))
 
       - script: script/build --no-bootstrap --create-debian-package --create-rpm-package --compress-artifacts
