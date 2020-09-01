@@ -22,6 +22,10 @@ jobs:
     steps:
       - template: templates/preparation.yml
 
+      - template: templates/cache.yml
+        parameters:
+          OS: windows
+
       - script: |
           node script\vsts\windows-run.js script\bootstrap.cmd
         env:

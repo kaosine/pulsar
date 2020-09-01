@@ -14,6 +14,10 @@ jobs:
     steps:
       - template: templates/preparation.yml
 
+      - template: templates/cache.yml
+        parameters:
+          OS: macos
+
       - script: script/bootstrap
         displayName: Bootstrap build environment
         env:
@@ -90,6 +94,10 @@ jobs:
 
     steps:
       - template: templates/preparation.yml
+
+      - template: templates/cache.yml
+        parameters:
+          OS: macos
 
       # The artifact caching task does not work on forks, so we need to
       # bootstrap again for pull requests coming from forked repositories.
