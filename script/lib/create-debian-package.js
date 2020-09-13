@@ -200,9 +200,14 @@ module.exports = function(packagedAppPath) {
   );
 
   console.log(`Generating .deb file from ${debianPackageDirPath}`);
-  spawnSync('fakeroot', ['dpkg-deb', '-b', debianPackageDirPath], {
-    stdio: 'inherit'
-  });
+  const compressionLevel = process.env.IS_RELEASE_BRANCH ? 6 : 0;
+  spawnSync(
+    'fakeroot',
+    ['dpkg-deb', `-z${compressionLevel}`, '-b', debianPackageDirPath],
+    {
+      stdio: 'inherit'
+    }
+  );
 
   console.log(
     `Copying generated package into "${outputDebianPackageFilePath}"`
