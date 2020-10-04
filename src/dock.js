@@ -223,6 +223,17 @@ module.exports = class Dock {
     const wrapperStyle = { [this.widthOrHeight]: `${size}px` };
 
     const paneContainerElement = this.paneContainer.getElement()
+
+    const dockBarElement = this.paneContainer.getRoot().getElement().firstElementChild.cloneNode(true)
+    const dockBarMaskStyle = {
+      [this.widthOrHeight]: shouldBeVisible ? '0px' : '50px'
+    };
+    const dockBarWrapperStyle = dockBarMaskStyle;
+    const rotationStyle = getRotationStyle(this.location)
+    if (rotationStyle) {
+      dockBarElement.style.transform  = rotationStyle;
+    }
+
     return $(
       'atom-dock',
       { className: this.location },
@@ -247,7 +258,23 @@ module.exports = class Dock {
             }),
             $(ElementComponent, { element: paneContainerElement }),
             $.div({ className: cursorOverlayElementClassList.join(' ') })
-          )
+          ),
+        ),
+        // dock bar
+        $.div(
+          {
+            className: maskElementClassList.join(' '),
+            style: dockBarMaskStyle
+          },
+          $.div(
+            {
+              ref: 'wrapperElement',
+              className: `atom-dock-content-wrapper ${this.location}`,
+              style: dockBarWrapperStyle
+            },
+            $(ElementComponent, { element: dockBarElement }),
+            $.div({ className: cursorOverlayElementClassList.join(' ') })
+          ),
         ),
         $(DockToggleButton, {
           ref: 'toggleButton',
@@ -876,6 +903,17 @@ function getPreferredSize(item, location) {
       return typeof item.getPreferredHeight === 'function'
         ? item.getPreferredHeight()
         : null;
+  }
+}
+
+function getRotationStyle(location) {
+  switch (location) {
+    case 'left':
+      return 'rotate(90deg)'
+    case 'right':
+      return 'rotate(-90deg)'
+    default:
+      return null
   }
 }
 
