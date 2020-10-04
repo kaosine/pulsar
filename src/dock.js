@@ -222,6 +222,7 @@ module.exports = class Dock {
     // ...but the content needs to maintain a constant size.
     const wrapperStyle = { [this.widthOrHeight]: `${size}px` };
 
+    const paneContainerElement = this.paneContainer.getElement()
     return $(
       'atom-dock',
       { className: this.location },
@@ -244,7 +245,7 @@ module.exports = class Dock {
               onResizeToFit: this.handleResizeToFit,
               dockIsVisible: this.state.visible
             }),
-            $(ElementComponent, { element: this.paneContainer.getElement() }),
+            $(ElementComponent, { element: paneContainerElement }),
             $.div({ className: cursorOverlayElementClassList.join(' ') })
           )
         ),
