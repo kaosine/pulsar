@@ -51,7 +51,9 @@ module.exports = class AtomWindow extends EventEmitter {
         nodeIntegration: true,
         webviewTag: true,
         // multi-threading
-        nodeIntegrationInWorker: true
+        nodeIntegrationInWorker: true,
+
+        experimentalFeatures: true
       },
       simpleFullscreen: this.getSimpleFullscreen()
     };
