@@ -1064,9 +1064,14 @@ describe('Project', () => {
           for (let event of events) {
             remaining.delete(event.path);
           }
+          clearTimeout(expireTimeoutId);
           if (remaining.size === 0) {
-            clearTimeout(expireTimeoutId);
             resolve();
+          } else {
+            console.error('Paths not seen:', remaining);
+            reject(
+              new Error('All events were processed but not all paths were seen.')
+            );
           }
         };
 
@@ -1078,7 +1083,7 @@ describe('Project', () => {
           );
         };
 
-        expireTimeoutId = setTimeout(expire, 2000);
+        expireTimeoutId = setTimeout(expire, 3000);
         checkCallback();
       });
     };
