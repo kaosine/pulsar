@@ -1068,9 +1068,11 @@ describe('Project', () => {
           if (remaining.size === 0) {
             resolve();
           } else {
-            console.error('Paths not seen:', remaining);
+            const remainingStr = [...remaining].join('\n');
             reject(
-              new Error('All events were processed but not all paths were seen.')
+              new Error(
+                `All events were processed but not all paths were seen. Paths not seen: ${remainingStr}`
+              )
             );
           }
         };
